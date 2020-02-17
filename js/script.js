@@ -11,16 +11,12 @@ var repository = [
     new Pokemon('Ninetales', 1.1, 'fire'),
     ];
 
-function printRepsoitory(list) {
+repository.forEach(function (currentObject) {
     var heightText;
-    for (i = 0; i < list.length; i++) {
-        if (list[i].height >= 1) {
-            heightText = `(height:${list[i].height} m) - Wow, that's big!`;
-        } else {
-            heightText = `(height:${list[i].height} m)`;
-        };
-        document.write(`<p>${list[i].name} ${heightText}</p>`);
+    if (currentObject.height >= 1) {
+        heightText = `(height:${currentObject.height} m) - Wow, that's big!`;
+    } else {
+        heightText = `(height:${currentObject.height} m)`;
     };
-};
-
-printRepsoitory(repository);
+    document.write(`<p>${currentObject.name} ${heightText}</p>`);
+});
