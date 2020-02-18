@@ -9,10 +9,10 @@ var myApplication = (function () {
         }
 
         var repository = [
-    new Pokemon('Bulbasaur', 0.7, 'grass', 'poison'),
-    new Pokemon('Charmander', 0.6, 'fire'),
-    new Pokemon('Squirtle', 0.5, 'water'),
-    new Pokemon('Ninetales', 1.1, 'fire'),
+            new Pokemon('Bulbasaur', 0.7, 'grass', 'poison'),
+            new Pokemon('Charmander', 0.6, 'fire'),
+            new Pokemon('Squirtle', 0.5, 'water'),
+            new Pokemon('Ninetales', 1.1, 'fire'),
     ];
 
         function add(name, height, ...types) {
