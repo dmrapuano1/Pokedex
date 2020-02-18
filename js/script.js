@@ -1,3 +1,9 @@
+//fix for linters on my Brackets. Must be commented out for code to run properly
+//{
+//    "interactive-linter.javascript": ["eslint"],
+//    "interactive-linter.coffeescript": null
+//}
+
 var myApplication = (function () {
 
     var pokemonRepository = (function () { //Start of repository IIFE
@@ -61,13 +67,19 @@ var myApplication = (function () {
             var itemButton = document.createElement('button')
             itemButton.innerHTML = pokemon.name;
             itemButton.classList.add('item-button');
-            itemButton.addEventListener('click', showDetails);
+            eventFunction(itemButton, pokemon);
             listItem.appendChild(itemButton);
             $listContainer.appendChild(listItem);
         };
 
         var showDetails = function (pokemon) {
-            console.log(pokemon);
+            console.log(pokemon.name);
+        };
+
+        var eventFunction = function (button, pokemon) {
+            button.addEventListener('click', function () {
+                showDetails(pokemon);
+            });
         };
 
         return {
