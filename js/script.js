@@ -1,6 +1,6 @@
 var myApplication = (function () {
 
-    var pokemonRepository = (function () {
+    var pokemonRepository = (function () { //Start of repository IIFE
 
         function Pokemon(name, height, ...types) {
             this.name = name;
@@ -9,10 +9,10 @@ var myApplication = (function () {
         }
 
         var repository = [
-    new Pokemon('Bulbasaur', 0.7, 'grass', 'poison'),
-    new Pokemon('Charmander', 0.6, 'fire'),
-    new Pokemon('Squirtle', 0.5, 'water'),
-    new Pokemon('Ninetales', 1.1, 'fire'),
+            new Pokemon('Bulbasaur', 0.7, 'grass', 'poison'),
+            new Pokemon('Charmander', 0.6, 'fire'),
+            new Pokemon('Squirtle', 0.5, 'water'),
+            new Pokemon('Ninetales', 1.1, 'fire'),
     ];
 
         function add(name, height, ...types) {
@@ -42,16 +42,42 @@ var myApplication = (function () {
             getAll: getAll
         };
     })();
-    pokemonRepository.add('Charzard', 2, 'fire', 'flying')
-    var list = pokemonRepository.getAll();
-    console.log(list);
-    list.forEach(function (currentObject) {
-        var heightText;
-        if (currentObject.height >= 1) {
-            heightText = `(height: ${currentObject.height}m) - Wow, that's big!`;
-        } else {
-            heightText = `(height: ${currentObject.height}m)`;
+
+    var createPokemon = (function () { //Start of create Pokemon IIFE
+        function createHieghtText(height) {
+            var heightText
+            if (height >= 1) {
+                heightText = `(height: ${height}m) - Wow, that's big!`;
+            } else {
+                heightText = `(height: ${height}m)`;
+            };
+            return heightText;
         };
-        document.write(`<p>${currentObject.name} ${heightText}</p>`);
-    });
+
+        var $listContainer = document.querySelector('.pokemon-list');
+
+        var addListItem = function (pokemon) {
+            var listItem = document.createElement('li');
+            var itemButton = document.createElement('button')
+            itemButton.innerHTML = pokemon.name;
+            itemButton.classList.add('item-button');
+            itemButton.addEventListener('click', showDetails);
+            listItem.appendChild(itemButton);
+            $listContainer.appendChild(listItem);
+        };
+
+        var showDetails = function (pokemon) {
+            console.log(pokemon);
+        };
+
+        return {
+            add: addListItem,
+        };
+    })();
+    //Start of 'global' IIFE funtionality
+    var list = pokemonRepository.getAll();
+    list.forEach(function (currentObject) {
+        createPokemon.add(currentObject);
+    })
+
 })();
