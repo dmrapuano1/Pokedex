@@ -11,6 +11,9 @@ body {
 }
 
 .pokemon-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
     list-style-type: none;
 }
 
@@ -25,13 +28,26 @@ body {
     text-align: center;
     font-size: 20px;
     text-decoration: none;
-    width: 250px;
+    width: 80%;
     padding: 15px;
     border-radius: 3px;
 }
 
 .item-button:hover {
     background-color: blue;
+}
+
+.loading-prompt {
+    position: fixed;
+    text-align: center;
+    color: white;
+}
+
+.loading-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @media all and (max-width: 600px) {
