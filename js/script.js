@@ -70,7 +70,6 @@ var myApplication = (function () {
             return fetch(url).then(function (response) {
                 return response.json();
             }).then(function (details) {
-                console.log(details)
                 // Adds the details to the item
                 pokemon.imageUrl = details.sprites.front_default;
                 pokemon.height = details.height;
