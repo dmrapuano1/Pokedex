@@ -30,7 +30,7 @@ var myApplication = (function () {
         // The location all pokemon will be listed in
         var repository = [];
         // URL for API pokemon come from
-        var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
+        var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=151';
 
         function add(pokemon) {
             // Adding new pokemon element to the respoitory
@@ -73,6 +73,7 @@ var myApplication = (function () {
                 // Adds the details to the item
                 pokemon.imageUrl = details.sprites.front_default;
                 pokemon.height = details.height;
+                pokemon.id = details.id;
                 // Pulls types in array through function
                 pokemon.types = typesToArray(details.types);
                 pokemon.abilities = typesToArray(details.abilities);
@@ -121,7 +122,7 @@ var myApplication = (function () {
             // Creating the list item for the pokemon
             var listItem = document.createElement('li');
             // Creating the button the pokemon element will be in
-            var itemButton = document.createElement('button')
+            var itemButton = document.createElement('button');
             // Changing text to pokemon name
             itemButton.innerHTML = pokemon.name;
             // Adding CSS class to button for styling
@@ -133,12 +134,29 @@ var myApplication = (function () {
             $listContainer.appendChild(listItem);
         };
 
-        function showDetails(item) {
+        var eventFunction = function (button, pokemon) {
+            var previousPokemon, nextPokemon
+            // Creates functionality for clicking the button
+            button.addEventListener('click', function () {
+                if (button.parentNode.previousSibling !== null) {
+                    previousPokemon = button.parentNode.previousSibling.childNodes[0].innerHTML;
+                };
+                if (button.parentNode.nextSibling !== null) {
+                    nextPokemon = button.parentNode.nextSibling.childNodes[0].innerHTML;
+                };
+                showDetails(pokemon, previousPokemon, nextPokemon);
+            });
+        };
+
+        function showDetails(item, previous, next) {
             // Loads the API for pokemon details on click instead of on load
             pokemonRepository.loadDetails(item).then(function () {
                 var types = cleanListLook(item.types);
                 var abilities = cleanListLook(item.abilities);
-                showModal(item.name, item.height, types, abilities, item.imageUrl);
+                showModal(item.name, item.height, types, abilities, item.imageUrl, item.id);
+                // Runs only if direct button is pushed. 'modalButtons' is activated elsewhere if pushed from  a modal button
+                modalButtons(previous, next);
+                return false;
             });
         };
 
@@ -158,15 +176,8 @@ var myApplication = (function () {
             return properties;
         };
 
-        var eventFunction = function (button, pokemon) {
-            // Creates functionality for clicking the button
-            button.addEventListener('click', function () {
-                showDetails(pokemon);
-            });
-        };
+        function showModal(title, heightText, typesText, abilityText, picture, id) {
 
-        function showModal(title, heightText, typesText, abilityText, picture) {
-            
             // Defining where modal belongs
             var $modalContainer = document.querySelector('#modal-container');
             // Empties modal of all previous content
@@ -184,7 +195,7 @@ var myApplication = (function () {
 
             // Creating header with pokemon name for modal
             var titleElement = document.createElement('h1');
-            titleElement.innerHTML = title;
+            titleElement.innerHTML = `${title} (${id})`;
 
             // Creating height section of body of modal
             var elementHeaderHeight = document.createElement('h2');
@@ -193,7 +204,7 @@ var myApplication = (function () {
             var contentElementHeight = document.createElement('p');
             contentElementHeight.classList.add('modalText-p');
             contentElementHeight.innerHTML = heightText;
-            
+
             // Creating types section of body of modal
             var elementHeaderTypes = document.createElement('h2');
             elementHeaderTypes.innerHTML = 'types:';
@@ -201,7 +212,7 @@ var myApplication = (function () {
             var contentElementTypes = document.createElement('p');
             contentElementTypes.classList.add('modalText-p');
             contentElementTypes.innerHTML = typesText;
-            
+
             // Creating abilities section of body of modal
             var elementHeaderAbility = document.createElement('h2');
             elementHeaderAbility.innerHTML = 'abilities:';
@@ -240,6 +251,52 @@ var myApplication = (function () {
             $modalContainer.classList.add('is-visible');
         };
 
+        function modalButtons(previousPokemon, nextPokemon) {
+            // We want to add a confirm and cancel button to the modal
+            var modal = document.querySelector('.modal');
+
+            if (previousPokemon !== undefined) {
+                var previousButton = document.createElement('button');
+                previousButton.classList.add('modal-previous');
+                previousButton.innerText = 'Previous';
+                previousButton.addEventListener('click', function () {
+                    hideModal();
+                    findCorrectPokemon(previousPokemon);
+                });
+                modal.appendChild(previousButton);
+            };
+
+            if (nextPokemon !== undefined) {
+                var nextButton = document.createElement('button');
+                nextButton.classList.add('modal-next');
+                nextButton.innerText = 'Next';
+                nextButton.addEventListener('click', function () {
+                    hideModal();
+                    findCorrectPokemon(nextPokemon);
+                });
+                modal.appendChild(nextButton);
+                nextButton.focus();
+            } else {
+                previousButton.focus()
+            };
+        };
+
+        function findCorrectPokemon(targetPokemon) {
+            var previousPokemon, nextPokemon, correctPokemon, pokemonFound;
+            pokemonRepository.getAll().forEach(function (pokemon) {
+                if (pokemonFound === true) {
+                    nextPokemon = pokemon.name;
+                    showDetails(correctPokemon, previousPokemon, nextPokemon);
+                    pokemonFound = false;
+                } else if (pokemon.name === targetPokemon) {
+                    pokemonFound = true
+                    correctPokemon = pokemon;
+                } else {
+                    previousPokemon = pokemon.name;
+                };
+            });
+        };
+
         function hideModal() {
             var $modalContainer = document.querySelector('#modal-container');
             $modalContainer.classList.remove('is-visible');
@@ -263,6 +320,7 @@ var myApplication = (function () {
         pokemonRepository.getAll().forEach(function (pokemon) {
             // Runs the list of functions to create button list for pokemon
             createPokemon.add(pokemon);
+            return false;
         });
     });
     toggleDisplay('off');

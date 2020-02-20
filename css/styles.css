@@ -95,6 +95,14 @@ body {
     text-decoration: underline;
 }
 
+.modal-previous {
+    margin-left: 2.5%;
+}
+
+.modal-next {
+    margin-left: 78.5%;
+}
+
 .modal h1 {
     text-align: center;
 }
@@ -113,8 +121,25 @@ body {
     text-align: center;
 }
 
-@media all and (max-width: 600px) {
+@media all and (max-width: 750px) {
     .item-button {
         padding: 10px;
         width: 200px;
     }
+
+    .pokemon-list {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media all and (min-width: 350) and (max-width: 500px) {
+    .pokemon-list {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media all and (max-width: 350) {
+    .pokemon-list {
+        grid-template-columns: 1fr;
+    }
+}
