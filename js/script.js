@@ -114,18 +114,6 @@ var myApplication = (function () {
     })();
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
-
-        // Creates "Wow that's big!" text from previous assignment
-        function createHieghtText(height) {
-            var heightText
-            if (height >= 10) {
-                heightText = `(height: ${height}m) - Wow, that's big!`;
-            } else {
-                heightText = `(height: ${height}m)`;
-            };
-            return heightText;
-        };
-
         // Pulls pokemon list
         var $listContainer = document.querySelector('.pokemon-list');
 
@@ -149,7 +137,22 @@ var myApplication = (function () {
             // Loads the API for pokemon details on click instead of on load
             pokemonRepository.loadDetails(item).then(function () {
                 console.log(item);
+                var types = cleanListLook(item.types);
+                var abilities = cleanListLook(item.abilities);
+                showModal(item.name, `<p>height: ${item.height}</p><p>types: ${types}</p><p>abilities: ${abilities}</p>`);
             });
+        };
+
+        function cleanListLook(item) {
+            var properties
+            for (i = 0; i < item.length; i++) {
+                if (properties === undefined){
+                    properties = `<br> ${item[i]}`;
+                } else{
+                properties += `<br> ${item[i]}`
+                };
+            };
+            return properties;
         };
 
         var eventFunction = function (button, pokemon) {
@@ -162,6 +165,55 @@ var myApplication = (function () {
         return {
             add: addListItem,
         };
+
+        function showModal(title, text) {
+            var $modalContainer = document.querySelector('#modal-container');
+            $modalContainer.innerHTML = '';
+
+            var modal = document.createElement('div');
+            modal.classList.add('modal');
+            var closeButtonElement = document.createElement('button');
+            closeButtonElement.classList.add('modal-close');
+            closeButtonElement.innerHTML = 'Close';
+            closeButtonElement.addEventListener('click', hideModal);
+
+            var titleElement = document.createElement('h1');
+            titleElement.innerHTML = title;
+
+            var contentElement = document.createElement('p');
+            contentElement.innerHTML = text;
+
+            modal.appendChild(closeButtonElement);
+            modal.appendChild(titleElement);
+            modal.appendChild(contentElement);
+            $modalContainer.appendChild(modal);
+
+            $modalContainer.addEventListener('click', function (event) {
+                var target = event.target;
+                if (target === $modalContainer) {
+                    hideModal();
+                };
+            });
+            $modalContainer.classList.add('is-visible');
+        };
+
+        function hideModal() {
+            var $modalContainer = document.querySelector('#modal-container');
+            $modalContainer.classList.remove('is-visible');
+        };
+
+        window.addEventListener('keydown', function (event) {
+            console.log(event.key)
+            var $modalContainer = document.querySelector('#modal-container');
+            if (event.key === 'Escape' && $modalContainer.classList.contains('is-visible')) {
+                hideModal();
+            }
+        });
+
+        return {
+            addButtonListener: addButtonListener,
+        }
+
     })();
     //Start of 'global' IIFE funtionality
 
