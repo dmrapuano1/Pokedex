@@ -136,10 +136,9 @@ var myApplication = (function () {
         function showDetails(item) {
             // Loads the API for pokemon details on click instead of on load
             pokemonRepository.loadDetails(item).then(function () {
-                console.log(item);
                 var types = cleanListLook(item.types);
                 var abilities = cleanListLook(item.abilities);
-                showModal(item.name, `<p>height: ${item.height}</p><p>types: ${types}</p><p>abilities: ${abilities}</p>`);
+                showModal(item.name, `<p>height: ${item.height}</p><p>types: ${types}</p><p>abilities: ${abilities}</p>`, item.imageUrl);
             });
         };
 
@@ -166,12 +165,13 @@ var myApplication = (function () {
             add: addListItem,
         };
 
-        function showModal(title, text) {
+        function showModal(title, text, picture) {
             var $modalContainer = document.querySelector('#modal-container');
             $modalContainer.innerHTML = '';
 
             var modal = document.createElement('div');
             modal.classList.add('modal');
+            
             var closeButtonElement = document.createElement('button');
             closeButtonElement.classList.add('modal-close');
             closeButtonElement.innerHTML = 'Close';
@@ -182,11 +182,17 @@ var myApplication = (function () {
 
             var contentElement = document.createElement('p');
             contentElement.innerHTML = text;
+            
+            var contentPicture = document.createElement('img');
+            contentPicture.classList.add('pokemon-picture');
 
             modal.appendChild(closeButtonElement);
             modal.appendChild(titleElement);
+            modal.appendChild(contentPicture);
             modal.appendChild(contentElement);
             $modalContainer.appendChild(modal);
+            
+            document.querySelector('.pokemon-picture').src = picture;
 
             $modalContainer.addEventListener('click', function (event) {
                 var target = event.target;
@@ -209,6 +215,10 @@ var myApplication = (function () {
                 hideModal();
             }
         });
+        
+        function addPicture(url){
+                document.querySelector('.pokemon-picture').src = url
+            }
 
         return {
             addButtonListener: addButtonListener,
