@@ -292,6 +292,9 @@ var myApplication = (function () {
                 } else if (pokemon.name === targetPokemon) {
                     pokemonFound = true
                     correctPokemon = pokemon;
+                    if (pokemon.id = 151){
+                        showDetails(correctPokemon, previousPokemon);
+                    };
                 } else {
                     previousPokemon = pokemon.name;
                 };
