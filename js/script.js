@@ -26,6 +26,7 @@ var myApplication = (function () {
         }
     }
 
+    toggleDisplay('on');
     var pokemonRepository = (function () { //Start of repository IIFE
         // The location all pokemon will be listed in
         var repository = [];
