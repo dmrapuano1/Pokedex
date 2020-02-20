@@ -138,19 +138,23 @@ var myApplication = (function () {
             pokemonRepository.loadDetails(item).then(function () {
                 var types = cleanListLook(item.types);
                 var abilities = cleanListLook(item.abilities);
-                showModal(item.name, `<p>height: ${item.height}</p><p>types: ${types}</p><p>abilities: ${abilities}</p>`, item.imageUrl);
+                showModal(item.name, item.height, types, abilities, item.imageUrl);
             });
         };
 
+        // Turns array into easy to read string for pop-up
         function cleanListLook(item) {
             var properties
             for (i = 0; i < item.length; i++) {
+                // Sets visible content to first array item
                 if (properties === undefined) {
-                    properties = `<br> ${item[i]}`;
+                    properties = item[i];
                 } else {
-                    properties += `<br> ${item[i]}`
+                    // Adds additional items in array below subsequent items
+                    properties += '<br> ' + item[i];
                 };
             };
+            // returns list for use
             return properties;
         };
 
@@ -161,52 +165,84 @@ var myApplication = (function () {
             });
         };
 
-        function showModal(title, text, picture) {
+        function showModal(title, heightText, typesText, abilityText, picture) {
+            
+            // Defining where modal belongs
             var $modalContainer = document.querySelector('#modal-container');
+            // Empties modal of all previous content
             $modalContainer.innerHTML = '';
 
+            // Creating modal
             var modal = document.createElement('div');
             modal.classList.add('modal');
 
+            // Creating close button for modal
             var closeButtonElement = document.createElement('button');
             closeButtonElement.classList.add('modal-close');
             closeButtonElement.innerHTML = 'Close';
             closeButtonElement.addEventListener('click', hideModal);
 
+            // Creating header with pokemon name for modal
             var titleElement = document.createElement('h1');
             titleElement.innerHTML = title;
 
-            var contentElement = document.createElement('p');
-            contentElement.innerHTML = text;
+            // Creating height section of body of modal
+            var elementHeaderHeight = document.createElement('h2');
+            elementHeaderHeight.innerHTML = 'height (dm):';
+            elementHeaderHeight.classList.add('h2');
+            var contentElementHeight = document.createElement('p');
+            contentElementHeight.classList.add('modalText-p');
+            contentElementHeight.innerHTML = heightText;
+            
+            // Creating types section of body of modal
+            var elementHeaderTypes = document.createElement('h2');
+            elementHeaderTypes.innerHTML = 'types:';
+            elementHeaderTypes.classList.add('h2');
+            var contentElementTypes = document.createElement('p');
+            contentElementTypes.classList.add('modalText-p');
+            contentElementTypes.innerHTML = typesText;
+            
+            // Creating abilities section of body of modal
+            var elementHeaderAbility = document.createElement('h2');
+            elementHeaderAbility.innerHTML = 'abilities:';
+            elementHeaderAbility.classList.add('h2');
+            var contentElementAbility = document.createElement('p');
+            contentElementAbility.classList.add('modalText-p');
+            contentElementAbility.innerHTML = abilityText;
 
+            // Creating picture for modal
             var contentPicture = document.createElement('img');
             contentPicture.classList.add('pokemon-picture');
 
+            // Appending all items to correct spots
             modal.appendChild(closeButtonElement);
             modal.appendChild(titleElement);
             modal.appendChild(contentPicture);
-            modal.appendChild(contentElement);
+            modal.appendChild(elementHeaderHeight);
+            modal.appendChild(contentElementHeight);
+            modal.appendChild(elementHeaderTypes);
+            modal.appendChild(contentElementTypes);
+            modal.appendChild(elementHeaderAbility);
+            modal.appendChild(contentElementAbility);
             $modalContainer.appendChild(modal);
 
+            // Adding picture to modal -has to be done here after picture is defined and placed on document
             document.querySelector('.pokemon-picture').src = picture;
 
+            // Adding event listener for clicking outside of the modal text-area
             $modalContainer.addEventListener('click', function (event) {
                 var target = event.target;
                 if (target === $modalContainer) {
                     hideModal();
                 };
             });
+            // Making modal visible to user
             $modalContainer.classList.add('is-visible');
         };
 
         function hideModal() {
             var $modalContainer = document.querySelector('#modal-container');
             $modalContainer.classList.remove('is-visible');
-        };
-
-
-        function addPicture(url) {
-            document.querySelector('.pokemon-picture').src = url;
         };
 
         return {

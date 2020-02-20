@@ -96,12 +96,21 @@ body {
 }
 
 .modal h1 {
-    margin-top: 0;
-    display: inline-block;
+    text-align: center;
+}
+
+.pokemon-picture {
+    display: block;
+    margin-left: 42.5%;
+}
+
+.modal h2 {
+    text-align: center;
 }
 
 .modal p {
     margin-bottom: 0;
+    text-align: center;
 }
 
 @media all and (max-width: 600px) {
