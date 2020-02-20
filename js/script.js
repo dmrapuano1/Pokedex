@@ -31,7 +31,7 @@ var myApplication = (function () {
         // The location all pokemon will be listed in
         var repository = [];
         // URL for API pokemon come from
-        var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=151';
+        var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=151'; //total number availible is 649
 
         function add(pokemon) {
             // Adding new pokemon element to the respoitory
