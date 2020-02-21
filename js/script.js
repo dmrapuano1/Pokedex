@@ -15,16 +15,13 @@
 var myApplication = (function () {
 
     var toggleDisplay = function (power) {
-        var loadingImg = document.querySelector('.loading-image');
+        var $loadingImg = $('.loading-image');
         if (power === 'off') {
-            loadingImg.parentNode.removeChild(loadingImg);
+            $loadingImg.hide();
         } else if (power === 'on') {
-            var pokeball = document.createElement('img');
-            pokeball.classList.add('loading-image');
-            document.querySelector('.loading-prompt').appendChild(pokeball);
-            document.querySelector('.loading-image').src = 'img/pokeball.gif';
-        }
-    }
+            $loadingImg.show();
+        };
+    };
 
     toggleDisplay('on');
     var pokemonRepository = (function () { //Start of repository IIFE
@@ -45,19 +42,18 @@ var myApplication = (function () {
         function loadList() {
             // Adds loading img
             toggleDisplay('on');
-            // Gets pokemon from the API
-            return fetch(apiUrl).then(function (response) {
-                return response.json();
+
+            return $.ajax(apiUrl, {
+                dataType: 'json'
             }).then(function (json) {
                 json.results.forEach(function (item) {
-                    // Creates pokemon item and attaches URL for details to be used later
                     var pokemon = {
                         name: item.name,
                         detailsUrl: item.url,
                     };
                     add(pokemon);
                 });
-                toggleDisplay('off')
+                toggleDisplay('off');
             }).catch(function (e) {
                 // Error catch to determine issue
                 console.error(e);
@@ -108,7 +104,6 @@ var myApplication = (function () {
         };
         // Allows other IIFEs to access specific functions
         return {
-            add: add,
             getAll: getAll,
             loadList: loadList,
             loadDetails: loadDetails,
@@ -116,36 +111,21 @@ var myApplication = (function () {
     })();
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
-        // Pulls pokemon list
-        var $listContainer = document.querySelector('.pokemon-list');
-
         var addListItem = function (pokemon) {
-            // Creating the list item for the pokemon
-            var listItem = document.createElement('li');
-            // Creating the button the pokemon element will be in
-            var itemButton = document.createElement('button');
-            // Changing text to pokemon name
-            itemButton.innerHTML = pokemon.name;
-            // Adding CSS class to button for styling
-            itemButton.classList.add('item-button');
-            eventFunction(itemButton, pokemon);
-            // Adding the button to the pokemon list item
-            listItem.appendChild(itemButton);
-            // Adding the list item to the list
-            $listContainer.appendChild(listItem);
+            var $itemButton = $(`<li><button class="item-button">${pokemon.name}</button></li>`);
+            eventFunction($itemButton, pokemon);
+            $('.pokemon-list').append($itemButton);
         };
-
         var eventFunction = function (button, pokemon) {
-            var previousPokemon, nextPokemon
             // Creates functionality for clicking the button
-            button.addEventListener('click', function () {
-                if (button.parentNode.previousSibling !== null) {
-                    previousPokemon = button.parentNode.previousSibling.childNodes[0].innerHTML;
+            button.click(function (event) {
+                if (event.target.parentNode.previousSibling !== null) {
+                    var previous = event.target.parentNode.previousSibling.childNodes[0].innerHTML;
                 };
-                if (button.parentNode.nextSibling !== null) {
-                    nextPokemon = button.parentNode.nextSibling.childNodes[0].innerHTML;
+                if (event.target.parentNode.nextSibling !== null) {
+                    var next = event.target.parentNode.nextSibling.childNodes[0].innerHTML;
                 };
-                showDetails(pokemon, previousPokemon, nextPokemon);
+                showDetails(pokemon, previous, next);
             });
         };
 
@@ -163,14 +143,14 @@ var myApplication = (function () {
 
         // Turns array into easy to read string for pop-up
         function cleanListLook(item) {
-            var properties
+            var properties;
             for (i = 0; i < item.length; i++) {
                 // Sets visible content to first array item
                 if (properties === undefined) {
                     properties = item[i];
                 } else {
                     // Adds additional items in array below subsequent items
-                    properties += '<br> ' + item[i];
+                    properties += `<br>${item[i]}`;
                 };
             };
             // returns list for use
@@ -178,78 +158,28 @@ var myApplication = (function () {
         };
 
         function showModal(title, heightText, typesText, abilityText, picture, id) {
-
             // Defining where modal belongs
-            var $modalContainer = document.querySelector('#modal-container');
+            var $modalContainer = $('#modal-container');
             // Empties modal of all previous content
-            $modalContainer.innerHTML = '';
-
+            $modalContainer.empty();
             // Creating modal
-            var modal = document.createElement('div');
-            modal.classList.add('modal');
-
-            // Creating close button for modal
-            var closeButtonElement = document.createElement('button');
-            closeButtonElement.classList.add('modal-close');
-            closeButtonElement.innerHTML = 'Close';
-            closeButtonElement.addEventListener('click', hideModal);
-
-            // Creating header with pokemon name for modal
-            var titleElement = document.createElement('h1');
-            titleElement.innerHTML = `${title} (${id})`;
-
-            // Creating height section of body of modal
-            var elementHeaderHeight = document.createElement('h2');
-            elementHeaderHeight.innerHTML = 'height (dm):';
-            elementHeaderHeight.classList.add('h2');
-            var contentElementHeight = document.createElement('p');
-            contentElementHeight.classList.add('modalText-p');
-            contentElementHeight.innerHTML = heightText;
-
-            // Creating types section of body of modal
-            var elementHeaderTypes = document.createElement('h2');
-            elementHeaderTypes.innerHTML = 'types:';
-            elementHeaderTypes.classList.add('h2');
-            var contentElementTypes = document.createElement('p');
-            contentElementTypes.classList.add('modalText-p');
-            contentElementTypes.innerHTML = typesText;
-
-            // Creating abilities section of body of modal
-            var elementHeaderAbility = document.createElement('h2');
-            elementHeaderAbility.innerHTML = 'abilities:';
-            elementHeaderAbility.classList.add('h2');
-            var contentElementAbility = document.createElement('p');
-            contentElementAbility.classList.add('modalText-p');
-            contentElementAbility.innerHTML = abilityText;
-
-            // Creating picture for modal
-            var contentPicture = document.createElement('img');
-            contentPicture.classList.add('pokemon-picture');
-
-            // Appending all items to correct spots
-            modal.appendChild(closeButtonElement);
-            modal.appendChild(titleElement);
-            modal.appendChild(contentPicture);
-            modal.appendChild(elementHeaderHeight);
-            modal.appendChild(contentElementHeight);
-            modal.appendChild(elementHeaderTypes);
-            modal.appendChild(contentElementTypes);
-            modal.appendChild(elementHeaderAbility);
-            modal.appendChild(contentElementAbility);
-            $modalContainer.appendChild(modal);
-
-            // Adding picture to modal -has to be done here after picture is defined and placed on document
-            document.querySelector('.pokemon-picture').src = picture;
-
+            var $modal = $(`<div class="modal">
+                                <button class="modal-close">Close</button>
+                                <h1>${title} (${id})</h1>
+                                <img src= ${picture} class="pokemon-picture">
+                                <h2>height (dm):</h2>
+                                <p class="modalText-p">${heightText}</p>
+                                <h2>types:</h2>
+                                <p class="modalText-p">${typesText}</p>
+                                <h2>abilities:</h2>
+                                <p class="modalText-p">${abilityText}</p>
+                            </div>`);
+            // Appending modal to modal-container
+            $modalContainer.append($modal);
             // Adding event listener for clicking outside of the modal text-area
-            $modalContainer.addEventListener('click', function (event) {
-                var target = event.target;
-                if (target === $modalContainer) {
-                    hideModal();
-                };
-            });
-            // Making modal visible to user
-            $modalContainer.classList.add('is-visible');
+            modalEvents();
+            activePokemon = title;
+            return activePokemon;
         };
 
         function modalButtons(previousPokemon, nextPokemon) {
@@ -278,7 +208,7 @@ var myApplication = (function () {
                 modal.appendChild(nextButton);
                 nextButton.focus();
             } else {
-                previousButton.focus()
+                previousButton.focus();
             };
         };
 
@@ -292,7 +222,7 @@ var myApplication = (function () {
                 } else if (pokemon.name === targetPokemon) {
                     pokemonFound = true
                     correctPokemon = pokemon;
-                    if (pokemon.id = 151){
+                    if (pokemon.id = 151) {
                         showDetails(correctPokemon, previousPokemon);
                     };
                 } else {
@@ -301,22 +231,76 @@ var myApplication = (function () {
             });
         };
 
-        function hideModal() {
-            var $modalContainer = document.querySelector('#modal-container');
-            $modalContainer.classList.remove('is-visible');
+        function findPrevious(direction) {
+            var previousPokemon, nextPokemon, correctPokemon, pokemonFound;
+            pokemonFound = false;
+            pokemonRepository.getAll().forEach(function (pokemon) {
+                switch (true) {
+                    case activePokemon === 'mew':
+                        findCorrectPokemon('mewtwo')
+                    case pokemonFound === true:
+                        nextPokemon = pokemon.name;
+                        pokemonFound = false;
+                        if (direction === 'next') {
+                            findCorrectPokemon(nextPokemon);
+                        } else if (direction === 'previous') {
+                            findCorrectPokemon(previousPokemon);
+                        };
+                        break;
+                    case pokemon.name === activePokemon:
+                        pokemonFound = true;
+                        break;
+                    default:
+                        previousPokemon = pokemon.name;
+                        break;
+                };
+            });
         };
+
+        function hideModal() {
+            var $modalContainer = $('#modal-container');
+            $modalContainer.removeClass('is-visible');
+        };
+
+        function modalEvents() {
+            var $modalContainer = $('#modal-container');
+            $modalContainer.click(function (event) {
+                var target = event.target;
+                if (target.id === 'modal-container') {
+                    hideModal();
+                };
+            });
+            // Making the modal close on button click ('x button')
+            $('.modal-close').click(hideModal);
+            // Making modal visible to user
+            $modalContainer.addClass('is-visible');
+        }
+
+        function modalMove(event) {
+            switch (true) {
+                case event.key === 'Escape':
+                    hideModal();
+                    break;
+                case event.key === 'ArrowRight':
+                    var target = findPrevious('next');
+                    break;
+                case event.key === 'ArrowLeft':
+                    var target = findPrevious('previous');
+                    break;
+            };
+        }
 
         return {
             add: addListItem,
-            hide: hideModal,
+            move: modalMove,
         };
 
     })();
     //Start of 'global' IIFE funtionality
-    window.addEventListener('keydown', function (event) {
-        var $modalContainer = document.querySelector('#modal-container');
-        if (event.key === 'Escape' && $modalContainer.classList.contains('is-visible')) {
-            createPokemon.hide();
+    $(document).keyup(function (event) {
+        var $modalContainer = $('#modal-container');
+        if ($modalContainer.hasClass('is-visible')) {
+            createPokemon.move(event);
         };
     });
     // Runs API load for data
