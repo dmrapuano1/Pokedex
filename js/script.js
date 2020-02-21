@@ -64,8 +64,8 @@ var myApplication = (function () {
             toggleDisplay('on');
             var url = pokemon.detailsUrl;
             // Pulls details for pokemon from API
-            return fetch(url).then(function (response) {
-                return response.json();
+            return $.ajax(url, {
+                dataType: 'json'
             }).then(function (details) {
                 // Adds the details to the item
                 pokemon.imageUrl = details.sprites.front_default;
@@ -79,6 +79,7 @@ var myApplication = (function () {
                 console.error(e);
             });
         };
+            
 
         var typesToArray = function (details) {
             // Pulls the portion of code that has the types as an array of objects
