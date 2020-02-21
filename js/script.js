@@ -29,7 +29,7 @@ var myApplication = (function () {
         var repository = [];
         // URL for API pokemon come from
         var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=151'; //total number availible is 649
-
+        
         function add(pokemon) {
             // Adding new pokemon element to the respoitory
             repository.push(pokemon);
@@ -133,8 +133,8 @@ var myApplication = (function () {
         function showDetails(item, previous, next) {
             // Loads the API for pokemon details on click instead of on load
             pokemonRepository.loadDetails(item).then(function () {
-                var types = cleanListLook(item.types);
-                var abilities = cleanListLook(item.abilities);
+                var types = listToString(item.types);
+                var abilities = listToString(item.abilities);
                 showModal(item.name, item.height, types, abilities, item.imageUrl, item.id);
                 // Runs only if direct button is pushed. 'modalButtons' is activated elsewhere if pushed from  a modal button
                 modalButtons(previous, next);
@@ -143,7 +143,7 @@ var myApplication = (function () {
         };
 
         // Turns array into easy to read string for pop-up
-        function cleanListLook(item) {
+        function listToString(item) {
             var properties;
             for (i = 0; i < item.length; i++) {
                 // Sets visible content to first array item
@@ -164,7 +164,7 @@ var myApplication = (function () {
             // Empties modal of all previous content
             $modalContainer.empty();
             // Creating modal
-            var $modal = $(`<div class="modal">
+            $modalContainer.append(`<div class="modal">
                                 <button class="modal-close">Close</button>
                                 <h1>${title} (${id})</h1>
                                 <img src= ${picture} class="pokemon-picture">
@@ -175,8 +175,6 @@ var myApplication = (function () {
                                 <h2>abilities:</h2>
                                 <p class="modalText-p">${abilityText}</p>
                             </div>`);
-            // Appending modal to modal-container
-            $modalContainer.append($modal);
             // Adding event listener for clicking outside of the modal text-area
             modalEvents();
             activePokemon = title;
@@ -185,31 +183,27 @@ var myApplication = (function () {
 
         function modalButtons(previousPokemon, nextPokemon) {
             // We want to add a confirm and cancel button to the modal
-            var modal = document.querySelector('.modal');
+            var $modal = $('.modal');
 
             if (previousPokemon !== undefined) {
-                var previousButton = document.createElement('button');
-                previousButton.classList.add('modal-previous');
-                previousButton.innerText = 'Previous';
-                previousButton.addEventListener('click', function () {
+                var $previousButton = $(`<button class="modal-previous">Previous</button>`);
+                $previousButton.click(function () {
                     hideModal();
                     findCorrectPokemon(previousPokemon);
                 });
-                modal.appendChild(previousButton);
+                $modal.append($previousButton);
             };
 
             if (nextPokemon !== undefined) {
-                var nextButton = document.createElement('button');
-                nextButton.classList.add('modal-next');
-                nextButton.innerText = 'Next';
-                nextButton.addEventListener('click', function () {
+                var $nextButton = $(`<button class="modal-next">Next</button>`)
+                $nextButton.click(function () {
                     hideModal();
                     findCorrectPokemon(nextPokemon);
                 });
-                modal.appendChild(nextButton);
-                nextButton.focus();
+                $modal.append($nextButton);
+                $nextButton.focus();
             } else {
-                previousButton.focus();
+                $previousButton.focus();
             };
         };
 
