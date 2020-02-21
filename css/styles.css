@@ -35,6 +35,7 @@ body {
 
 .item-button:hover {
     background-color: blue;
+    cursor: pointer;
 }
 
 .loading-prompt {
@@ -96,11 +97,11 @@ body {
 }
 
 .modal-previous {
-    margin-left: 2.5%;
+    float: left;
 }
 
 .modal-next {
-    margin-left: 78.5%;
+    float: right;
 }
 
 .modal h1 {
@@ -128,18 +129,6 @@ body {
     }
 
     .pokemon-list {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-}
-
-@media all and (min-width: 350) and (max-width: 500px) {
-    .pokemon-list {
         grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media all and (max-width: 350) {
-    .pokemon-list {
-        grid-template-columns: 1fr;
     }
 }
