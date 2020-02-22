@@ -29,7 +29,7 @@ var myApplication = (function () {
         var repository = [];
         // URL for API pokemon come from
         var apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=151'; //total number availible is 649
-        
+
         function add(pokemon) {
             // Adding new pokemon element to the respoitory
             repository.push(pokemon);
@@ -79,7 +79,7 @@ var myApplication = (function () {
                 console.error(e);
             });
         };
-            
+
 
         var typesToArray = function (details) {
             // Pulls the portion of code that has the types as an array of objects
@@ -113,7 +113,10 @@ var myApplication = (function () {
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
         var addListItem = function (pokemon) {
-            var $itemButton = $(`<li><button class="item-button">${pokemon.name}</button></li>`);
+            var $itemButton = $(`<div class="col-md-3 form-group">
+                                    <div class="sr-only">Open information about pokemon: ${pokemon.name}</div>
+                                    <button type="button" class="btn btn btn-success btn-lg item-button">${pokemon.name}</button>
+                                </div>`);
             eventFunction($itemButton, pokemon);
             $('.pokemon-list').append($itemButton);
         };
@@ -121,10 +124,10 @@ var myApplication = (function () {
             // Creates functionality for clicking the button
             button.click(function (event) {
                 if (event.target.parentNode.previousSibling !== null) {
-                    var previous = event.target.parentNode.previousSibling.childNodes[0].innerHTML;
+                    var previous = event.target.parentNode.previousSibling.childNodes[3].innerHTML;
                 };
                 if (event.target.parentNode.nextSibling !== null) {
-                    var next = event.target.parentNode.nextSibling.childNodes[0].innerHTML;
+                    var next = event.target.parentNode.nextSibling.childNodes[3].innerHTML;
                 };
                 showDetails(pokemon, previous, next);
             });
@@ -165,7 +168,7 @@ var myApplication = (function () {
             $modalContainer.empty();
             // Creating modal
             $modalContainer.append(`<div class="modal">
-                                <button class="modal-close">Close</button>
+                                <button type="button" class="btn btn-link modal-close">Close</button>
                                 <h1>${title} (${id})</h1>
                                 <img src= ${picture} class="pokemon-picture">
                                 <h2>height (dm):</h2>
@@ -185,27 +188,30 @@ var myApplication = (function () {
             // We want to add a confirm and cancel button to the modal
             var $modal = $('.modal');
 
-            if (previousPokemon !== undefined) {
-                var $previousButton = $(`<button class="modal-previous">Previous</button>`);
-                $previousButton.click(function () {
-                    hideModal();
-                    findCorrectPokemon(previousPokemon);
-                });
-                $modal.append($previousButton);
-            };
+            if (previousPokemon === undefined) {
+                previousPokemon = 'mew'
+            }
+            var $previousButton = $(`<div class="sr-only">Open information about the previous pokemon</div>
+                                        <button type="button" class="btn btn-secondary modal-previous">Previous</button>`);
+            $previousButton.click(function () {
+                hideModal();
+                findCorrectPokemon(previousPokemon);
+            });
+            $modal.append($previousButton);
 
-            if (nextPokemon !== undefined) {
-                var $nextButton = $(`<button class="modal-next">Next</button>`)
-                $nextButton.click(function () {
-                    hideModal();
-                    findCorrectPokemon(nextPokemon);
-                });
-                $modal.append($nextButton);
-                $nextButton.focus();
-            } else {
-                $previousButton.focus();
-            };
+            if (nextPokemon === undefined) {
+                nextPokemon = 'bulbasaur'
+            }
+            var $nextButton = $(`<div class="sr-only">Open information about the next pokemon</div>
+                                    <button type="button" class="btn btn-primary modal-next">Next</button>`)
+            $nextButton.click(function () {
+                hideModal();
+                findCorrectPokemon(nextPokemon);
+            });
+            $modal.append($nextButton);
+            $nextButton.focus();
         };
+
 
         function findCorrectPokemon(targetPokemon) {
             var previousPokemon, nextPokemon, correctPokemon, pokemonFound;
@@ -218,7 +224,7 @@ var myApplication = (function () {
                     pokemonFound = true
                     correctPokemon = pokemon;
                     if (pokemon.id = 151) {
-                        showDetails(correctPokemon, previousPokemon);
+                        showDetails(correctPokemon, previousPokemon, 'bulbasaur');
                     };
                 } else {
                     previousPokemon = pokemon.name;
@@ -226,24 +232,23 @@ var myApplication = (function () {
             });
         };
 
-        function findPrevious(direction) {
+        function arrowFunction(direction) {
             var previousPokemon, nextPokemon, correctPokemon, pokemonFound;
             pokemonFound = false;
+            previousPokemon = 'mew';
             pokemonRepository.getAll().forEach(function (pokemon) {
                 switch (true) {
-                    case activePokemon === 'mew':
-                        findCorrectPokemon('mewtwo')
                     case pokemonFound === true:
                         nextPokemon = pokemon.name;
                         pokemonFound = false;
-                        if (direction === 'next') {
-                            findCorrectPokemon(nextPokemon);
-                        } else if (direction === 'previous') {
-                            findCorrectPokemon(previousPokemon);
-                        };
+                        direction === 'next' ? findCorrectPokemon(nextPokemon) : findCorrectPokemon(previousPokemon);
                         break;
                     case pokemon.name === activePokemon:
-                        pokemonFound = true;
+                        pokemonFound = true
+                        if (pokemon.id === 151) {
+                            nextPokemon = 'bulbasaur';
+                            direction === 'next' ? findCorrectPokemon(nextPokemon) : findCorrectPokemon(previousPokemon);
+                        };
                         break;
                     default:
                         previousPokemon = pokemon.name;
@@ -277,10 +282,10 @@ var myApplication = (function () {
                     hideModal();
                     break;
                 case event.key === 'ArrowRight':
-                    var target = findPrevious('next');
+                    var target = arrowFunction('next');
                     break;
                 case event.key === 'ArrowLeft':
-                    var target = findPrevious('previous');
+                    var target = arrowFunction('previous');
                     break;
             };
         }

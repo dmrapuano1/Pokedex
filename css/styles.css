@@ -10,13 +10,6 @@ body {
     text-align: left;
 }
 
-.pokemon-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 5px;
-    list-style-type: none;
-}
-
 .item-button {
     border-bottom: solid;
     border-bottom-width: .5px;
@@ -89,11 +82,6 @@ body {
 
 .modal-close {
     float: right;
-    -webkit-appearance: none;
-    border: 0;
-    background: none;
-    color: #777;
-    text-decoration: underline;
 }
 
 .modal-previous {
