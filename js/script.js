@@ -113,13 +113,14 @@ var myApplication = (function () {
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
         var addListItem = function (pokemon) {
-            var $itemButton = $(`<div class="col-md-3 form-group">
+            var $itemButton = $(`<div class="col-md-4 form-group">
                                     <div class="sr-only">Open information about pokemon: ${pokemon.name}</div>
-                                    <button type="button" class="btn btn btn-success btn-lg item-button">${pokemon.name}</button>
+                                    <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#modal-container">${pokemon.name}</button>
                                 </div>`);
             eventFunction($itemButton, pokemon);
             $('.pokemon-list').append($itemButton);
         };
+        
         var eventFunction = function (button, pokemon) {
             // Creates functionality for clicking the button
             button.click(function (event) {
@@ -167,34 +168,44 @@ var myApplication = (function () {
             // Empties modal of all previous content
             $modalContainer.empty();
             // Creating modal
-            $modalContainer.append(`<div class="modal">
-                                <button type="button" class="btn btn-link modal-close">Close</button>
-                                <h1>${title} (${id})</h1>
-                                <img src= ${picture} class="pokemon-picture">
-                                <h2>height (dm):</h2>
-                                <p class="modalText-p">${heightText}</p>
-                                <h2>types:</h2>
-                                <p class="modalText-p">${typesText}</p>
-                                <h2>abilities:</h2>
-                                <p class="modalText-p">${abilityText}</p>
-                            </div>`);
+            $modalContainer.append(`<div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="exampleModalLabel">${title} (${id})</h4>
+                                                <button type="button" class="btn btn-link" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">Close</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <img src= ${picture} class="pokemon-picture">
+                                                <h5>height (dm):</h5>
+                                                <p class="modalText-p">${heightText}</p>
+                                                <h5>types:</h5>
+                                                <p class="modalText-p">${typesText}</p>
+                                                <h5>abilities:</h5>
+                                                <p class="modalText-p">${abilityText}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                            </div>
+                                        </div>
+                                    </div>`)
             // Adding event listener for clicking outside of the modal text-area
-            modalEvents();
             activePokemon = title;
             return activePokemon;
         };
 
         function modalButtons(previousPokemon, nextPokemon) {
+            console.log(previousPokemon);
+            console.log(nextPokemon);
             // We want to add a confirm and cancel button to the modal
-            var $modal = $('.modal');
+            var $modal = $('.modal-footer');
 
             if (previousPokemon === undefined) {
                 previousPokemon = 'mew'
             }
             var $previousButton = $(`<div class="sr-only">Open information about the previous pokemon</div>
-                                        <button type="button" class="btn btn-secondary modal-previous">Previous</button>`);
+                                        <button type="button" class="btn btn-secondary mr-auto">Previous</button>`);
             $previousButton.click(function () {
-                hideModal();
                 findCorrectPokemon(previousPokemon);
             });
             $modal.append($previousButton);
@@ -203,9 +214,8 @@ var myApplication = (function () {
                 nextPokemon = 'bulbasaur'
             }
             var $nextButton = $(`<div class="sr-only">Open information about the next pokemon</div>
-                                    <button type="button" class="btn btn-primary modal-next">Next</button>`)
+                                    <button type="button" class="btn btn-primary">Next</button>`)
             $nextButton.click(function () {
-                hideModal();
                 findCorrectPokemon(nextPokemon);
             });
             $modal.append($nextButton);
@@ -257,30 +267,8 @@ var myApplication = (function () {
             });
         };
 
-        function hideModal() {
-            var $modalContainer = $('#modal-container');
-            $modalContainer.removeClass('is-visible');
-        };
-
-        function modalEvents() {
-            var $modalContainer = $('#modal-container');
-            $modalContainer.click(function (event) {
-                var target = event.target;
-                if (target.id === 'modal-container') {
-                    hideModal();
-                };
-            });
-            // Making the modal close on button click ('x button')
-            $('.modal-close').click(hideModal);
-            // Making modal visible to user
-            $modalContainer.addClass('is-visible');
-        }
-
         function modalMove(event) {
             switch (true) {
-                case event.key === 'Escape':
-                    hideModal();
-                    break;
                 case event.key === 'ArrowRight':
                     var target = arrowFunction('next');
                     break;
@@ -299,9 +287,7 @@ var myApplication = (function () {
     //Start of 'global' IIFE funtionality
     $(document).keyup(function (event) {
         var $modalContainer = $('#modal-container');
-        if ($modalContainer.hasClass('is-visible')) {
             createPokemon.move(event);
-        };
     });
     // Runs API load for data
     pokemonRepository.loadList().then(function () {
