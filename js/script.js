@@ -1,17 +1,3 @@
-//fix for linters on my Brackets. Must be commented out for code to run properly
-//{
-//    "parserOptions": {
-//        "ecmaVersion": 6,
-//        "sourceType": "module",
-//        "ecmaFeatures": {
-//            "jsx": true
-//        }
-//    },
-//    "rules": {
-//        "semi": "error"
-//    }
-//}
-
 var myApplication = (function () {
 
     var toggleDisplay = function (power) {
@@ -95,7 +81,7 @@ var myApplication = (function () {
                         portionArray.push(currentType);
                         break;
                     case typeArray[i].ability !== undefined:
-                        var currentType = typeArray[i].ability.name;
+                        currentType = typeArray[i].ability.name;
                         portionArray.push(currentType);
                         break;
                 };
