@@ -113,14 +113,14 @@ var myApplication = (function () {
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
         var addListItem = function (pokemon) {
-            var $itemButton = $(`<div class="col-md-4 form-group">
+            var $itemButton = $(`<div class="col-sm-6 col-md-4 col-lg-3 form-group">
                                     <div class="sr-only">Open information about pokemon: ${pokemon.name}</div>
                                     <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#modal-container">${pokemon.name}</button>
                                 </div>`);
             eventFunction($itemButton, pokemon);
             $('.pokemon-list').append($itemButton);
         };
-        
+
         var eventFunction = function (button, pokemon) {
             // Creates functionality for clicking the button
             button.click(function (event) {
@@ -195,8 +195,6 @@ var myApplication = (function () {
         };
 
         function modalButtons(previousPokemon, nextPokemon) {
-            console.log(previousPokemon);
-            console.log(nextPokemon);
             // We want to add a confirm and cancel button to the modal
             var $modal = $('.modal-footer');
 
@@ -204,7 +202,7 @@ var myApplication = (function () {
                 previousPokemon = 'mew'
             }
             var $previousButton = $(`<div class="sr-only">Open information about the previous pokemon</div>
-                                        <button type="button" class="btn btn-secondary mr-auto">Previous</button>`);
+                                    <button type="button" class="btn btn-secondary mr-auto">Previous</button>`);
             $previousButton.click(function () {
                 findCorrectPokemon(previousPokemon);
             });
@@ -214,7 +212,7 @@ var myApplication = (function () {
                 nextPokemon = 'bulbasaur'
             }
             var $nextButton = $(`<div class="sr-only">Open information about the next pokemon</div>
-                                    <button type="button" class="btn btn-primary">Next</button>`)
+                                <button type="button" class="btn btn-primary">Next</button>`)
             $nextButton.click(function () {
                 findCorrectPokemon(nextPokemon);
             });
@@ -287,7 +285,7 @@ var myApplication = (function () {
     //Start of 'global' IIFE funtionality
     $(document).keyup(function (event) {
         var $modalContainer = $('#modal-container');
-            createPokemon.move(event);
+        createPokemon.move(event);
     });
     // Runs API load for data
     pokemonRepository.loadList().then(function () {
