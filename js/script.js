@@ -37,7 +37,7 @@ var myApplication = (function () {
 
         function getAll() {
             return repository;
-        }
+        };
 
         function loadList() {
             // Adds loading img
@@ -200,7 +200,7 @@ var myApplication = (function () {
 
             if (previousPokemon === undefined) {
                 previousPokemon = 'mew'
-            }
+            };
             var $previousButton = $(`<div class="sr-only">Open information about the previous pokemon</div>
                                     <button type="button" class="btn btn-secondary mr-auto">Previous</button>`);
             $previousButton.click(function () {
@@ -210,7 +210,7 @@ var myApplication = (function () {
 
             if (nextPokemon === undefined) {
                 nextPokemon = 'bulbasaur'
-            }
+            };
             var $nextButton = $(`<div class="sr-only">Open information about the next pokemon</div>
                                 <button type="button" class="btn btn-primary">Next</button>`)
             $nextButton.click(function () {
@@ -274,7 +274,7 @@ var myApplication = (function () {
                     var target = arrowFunction('previous');
                     break;
             };
-        }
+        };
 
         return {
             add: addListItem,
