@@ -12,9 +12,26 @@
 </head>
 
 <body>
+    <a id="top-anchor"></a>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Pokédex</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#top-anchor">Top</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#bottom-anchor">Bottom</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div class="page-container">
         <header class="container-fluid">
-            <div class="row pokemon-list"></div>
+            <ul class="row pokemon-list list-unstyled"></ul>
         </header>
         <div class="loading-prompt col">
             <img class="loading-image" src="img/pokeball.gif" alt="Loading, please wait." />
@@ -24,6 +41,7 @@
             <div class="modal-dialog" role="document">
             </div>
         </div>
+        <a id="bottom-anchor"></a>
     </div>
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

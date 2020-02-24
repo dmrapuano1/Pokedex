@@ -23,7 +23,7 @@ var myApplication = (function () {
 
         function getAll() {
             return repository;
-        }
+        };
 
         function loadList() {
             // Adds loading img
@@ -99,10 +99,10 @@ var myApplication = (function () {
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
         var addListItem = function (pokemon) {
-            var $itemButton = $(`<div class="col-sm-6 col-md-4 col-lg-3 form-group">
+            var $itemButton = $(`<li class="col-sm-6 col-md-4 col-lg-3 form-group">
                                     <div class="sr-only">Open information about pokemon: ${pokemon.name}</div>
                                     <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#modal-container">${pokemon.name}</button>
-                                </div>`);
+                                </li>`);
             eventFunction($itemButton, pokemon);
             $('.pokemon-list').append($itemButton);
         };
@@ -186,7 +186,7 @@ var myApplication = (function () {
 
             if (previousPokemon === undefined) {
                 previousPokemon = 'mew'
-            }
+            };
             var $previousButton = $(`<div class="sr-only">Open information about the previous pokemon</div>
                                     <button type="button" class="btn btn-secondary mr-auto">Previous</button>`);
             $previousButton.click(function () {
@@ -196,7 +196,7 @@ var myApplication = (function () {
 
             if (nextPokemon === undefined) {
                 nextPokemon = 'bulbasaur'
-            }
+            };
             var $nextButton = $(`<div class="sr-only">Open information about the next pokemon</div>
                                 <button type="button" class="btn btn-primary">Next</button>`)
             $nextButton.click(function () {
@@ -260,7 +260,7 @@ var myApplication = (function () {
                     var target = arrowFunction('previous');
                     break;
             };
-        }
+        };
 
         return {
             add: addListItem,
