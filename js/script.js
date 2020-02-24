@@ -113,10 +113,10 @@ var myApplication = (function () {
 
     var createPokemon = (function () { //Start of create Pokemon IIFE
         var addListItem = function (pokemon) {
-            var $itemButton = $(`<div class="col-sm-6 col-md-4 col-lg-3 form-group">
+            var $itemButton = $(`<li class="col-sm-6 col-md-4 col-lg-3 form-group">
                                     <div class="sr-only">Open information about pokemon: ${pokemon.name}</div>
                                     <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#modal-container">${pokemon.name}</button>
-                                </div>`);
+                                </li>`);
             eventFunction($itemButton, pokemon);
             $('.pokemon-list').append($itemButton);
         };
